@@ -5,8 +5,10 @@ data "aws_caller_identity" "current" {}
 resource "aws_s3_bucket" "cloudtrail_bucket" {
   bucket        = var.cloudtrail_bucket_name
   force_destroy = true
-  policy = <<POLICY
-  {
+
+    policy = <<POLICY
+
+    {}
     "Version": "2012-10-17",
     "Statement": [
         {
@@ -31,13 +33,14 @@ resource "aws_s3_bucket" "cloudtrail_bucket" {
                 "StringEquals": {
                     "s3:x-amz-acl": "bucket-owner-full-control",
                     "aws:SourceArn": "arn:aws:cloudtrail:region:$(data.aws_caller_identity.current.account_id):trail/var.cloudtrail_name"
+                  }
                 }
-            }
         }
-    ]
+        ]
+      }
+POLICY
 }
 
-}
 
 resource "aws_cloudtrail" "main_cloudtrail" {
   name                          = var.cloudtrail_name
